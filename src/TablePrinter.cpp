@@ -11,8 +11,6 @@ namespace bprinter {
 
 TablePrinter::TablePrinter(std::ostream* output, const std::string& separator, const std::string& lineEnding) :
   _outStream(output),
-  _row(0),
-  _col(0),
   _separator(separator),
   _lineEnding(lineEnding),
   _format(format::none) {}
@@ -62,7 +60,7 @@ void TablePrinter::addColumn(const std::string& name, unsigned int width, const 
 void TablePrinter::printHorizontalLine() {
   *_outStream << "+"; // the left bar
 
-  for (int i = 0; i < tableWidth() - 2; ++i)
+  for (unsigned int i = 0; i < tableWidth() - 2; ++i)
     *_outStream << "-";
 
   *_outStream << "+"; // the right bar
