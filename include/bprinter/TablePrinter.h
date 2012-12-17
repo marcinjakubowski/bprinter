@@ -8,7 +8,10 @@
 #include <sstream>
 #include <cmath>
 
+#include "PrintFormat.h"
+
 namespace bprinter {
+
 class endl{};
 /** \class TablePrinter
 
@@ -34,18 +37,20 @@ public:
   TablePrinter(std::ostream* output = &std::cout, const std::string& separator = "|", const std::string& lineEnding = "");
   ~TablePrinter();
 
+  //getter
   unsigned int numberOfColumns() const;
   unsigned int tableWidth() const;
   std::string separator() const;
   std::string columnName(const unsigned int i) const;
   unsigned int columnWidth(const unsigned int i) const;
+  PrintFormat columnHeaderFormat(const unsigned int i) const;
 
-  void addColumn(const std::string& name, const unsigned int width);
+  void addColumn(const std::string& name, const unsigned int width = 25, const PrintFormat& format = format::none);
 
   void printHeader();
   void printFooter();
 
-
+  TablePrinter& operator<<(const PrintFormat& format);
   TablePrinter& operator<<(endl input);
   TablePrinter& operator<<(float input);
   TablePrinter& operator<<(double input);
@@ -83,6 +88,9 @@ private:
   std::vector<unsigned int> _columnWidths;
   std::string _separator;
   std::string _lineEnding;
+
+  PrintFormat _format;
+  std::vector<PrintFormat> _headerFormats;
 
   unsigned int _row;
   unsigned int _col;

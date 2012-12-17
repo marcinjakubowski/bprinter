@@ -1,4 +1,7 @@
 #include "bprinter/TablePrinter.h"
+
+#include "bprinter/PrintFormat.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -20,11 +23,21 @@ int main(int argc, char** argv){
   tp << "John Doe" << 26 << "Exact size int" << 125456789;
   tp << "John Doe" << 26 << "Exact size int" << -12545678;
   tp << "John Doe" << 26 << "Exact size int" << -125456789;
-  tp << "John Doe" << 26 << "Exact size float" << -1254567.8;
+  tp << "John Doe" << 26 << "Exact size float" << -1254567.8f;
   tp << "John Doe" << 26 << "Negative Int" << -1254;
   tp << "Jane Doe" << bprinter::endl();
   tp << "Tom Doe" << 7 << "Student" << -M_PI;
   tp.printFooter();
 
-  return 1;
+
+  TablePrinter tp2;
+  tp2.addColumn("red", 20, bprinter::format::red);
+  tp2.addColumn("nothing");
+  tp2.addColumn("yellow", 8, bprinter::format::yellow);
+
+  tp2.printHeader();
+  tp2.printHeader();
+
+
+  return 0;
 }

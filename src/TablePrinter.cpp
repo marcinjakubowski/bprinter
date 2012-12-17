@@ -4,43 +4,52 @@
 #include <iomanip>
 #include <stdexcept>
 
+#include "bprinter/PrintFormat.h"
+
+
 namespace bprinter {
+
 TablePrinter::TablePrinter(std::ostream* output, const std::string& separator, const std::string& lineEnding) :
   _outStream(output),
   _row(0),
   _col(0),
   _separator(separator),
-  _lineEnding(lineEnding) {}
+  _lineEnding(lineEnding) {
+  _format = format::none;
+  }
 
 TablePrinter::~TablePrinter() {}
 
+//getter
 unsigned int TablePrinter::numberOfColumns() const {
   return _columnNames.size();
 }
-
 unsigned int TablePrinter::tableWidth() const {
   unsigned int tableWidth = separator().size();
   for (unsigned int i = 0; i < numberOfColumns(); ++i)
     tableWidth += columnWidth(i) + separator().size();
   return tableWidth;
 }
-
 std::string TablePrinter::separator() const {
   return _separator;
 }
-std::string TablePrinter::columnName(unsigned int i) const {
+std::string TablePrinter::columnName(const unsigned int i) const {
   return _columnNames[i];
 }
-unsigned int TablePrinter::columnWidth(unsigned int i) const {
+unsigned int TablePrinter::columnWidth(const unsigned int i) const {
   return _columnWidths[i];
+}
+PrintFormat TablePrinter::columnHeaderFormat(const unsigned int i) const {
+  return _headerFormats[i];
 }
 
 /** \brief Add a column to our table
  ** 
- ** \param headerName Name to be print for the header
+ ** \param name Name to be print for the header
  ** \param width the width of the column (has to be >=5)
+ ** \param format the format of the header cell
  ** */
-void TablePrinter::addColumn(const std::string& name, unsigned int width){
+void TablePrinter::addColumn(const std::string& name, unsigned int width, const PrintFormat& format){
   if (width < 4)
     throw std::invalid_argument("Column width has to be >= 4");
   if (name.size() == 0)
@@ -48,6 +57,7 @@ void TablePrinter::addColumn(const std::string& name, unsigned int width){
 
   _columnNames.push_back(name);
   _columnWidths.push_back(width);
+  _headerFormats.push_back(format);
 }
 
 void TablePrinter::printHorizontalLine() {
@@ -72,7 +82,9 @@ void TablePrinter::printHeader(){
   *_outStream << separator();
 
   for (unsigned int i = 0; i < numberOfColumns(); ++i) {
+    *_outStream << columnHeaderFormat(i).formatString();
     *_outStream << std::setw(columnWidth(i)) << columnName(i).substr(0, columnWidth(i));
+    *_outStream << columnHeaderFormat(i).unformatString();
     if (i < numberOfColumns()){
       *_outStream << separator();
     }
@@ -87,13 +99,16 @@ void TablePrinter::printFooter(){
   printHorizontalLine();
 }
 
+
+TablePrinter& TablePrinter::operator<<(const PrintFormat& format) {
+  _format = format;
+}
 TablePrinter& TablePrinter::operator<<(endl input) {
   while (_col > 0){
     *this << "";
   }
   return *this;
 }
-
 TablePrinter& TablePrinter::operator<<(float input) {
   printDecimalNumber<float>(input);
   return *this;

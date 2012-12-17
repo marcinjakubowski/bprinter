@@ -3,13 +3,20 @@
 
 #include <string>
 
-namespace bprinter{
+namespace bprinter {
 
-enum PrintColor {black, red, green, yellow, blue, orange, white};
+enum PrintColor {c_none,
+                 c_black,
+                 c_red,
+		 c_green,
+		 c_yellow,
+		 c_blue,
+		 c_orange,
+		 c_white };
 
-class PrintFormat{
+class PrintFormat {
 public:
-  PrintFormat(PrintColor color = black, bool bold = false) :
+  PrintFormat(PrintColor color = c_black, bool bold = false) :
     _color(color),
     _bold(bold) {}
   ~PrintFormat() {}
@@ -25,10 +32,16 @@ public:
   std::string unformatString() const;
 
 private:
-  const PrintColor _color;
-  const bool _bold;
+  PrintColor _color;
+  bool _bold;
 };
 
+namespace format {
+  const PrintFormat none = PrintFormat(c_none);
+  const PrintFormat black = PrintFormat(c_black);
+  const PrintFormat red = PrintFormat(c_red);
+  const PrintFormat yellow = PrintFormat(c_yellow);
+} //namespace format
 
 } //namespace bprinter
 
