@@ -1,37 +1,33 @@
 #include "bprinter/PrintFormat.h"
 
+#include <sstream>
+
 namespace bprinter{
 
 std::string PrintFormat::formatString() const {
-  if (color() == c_none)
-    return "";
+  std::stringstream buf;
 
-
-  std::string format("\033[");
+  buf << "\033[";
   if (bold())
-    format += "1";
+    buf << '1';
   else
-    format += "0";
-
-  format += ";";
+    buf << '0';
+  buf << ';';
 
   switch(color()){
-    case c_red: format += "31"; break;
-    case c_green: format += "32"; break;
-    case c_yellow: format += "33"; break;
-    case c_blue: format += "34"; break;
-    case c_magenta: format += "35"; break;
-    case c_cyan: format += "36"; break;
-    case c_white: format += "37"; break;
-    //default
-    case c_black:
-    default: format += "30";
-    
+    case c_none: return "";
+    case c_black: buf << "30"; break;
+    case c_red: buf << "31"; break;
+    case c_green: buf << "32"; break;
+    case c_yellow: buf << "33"; break;
+    case c_blue: buf << "34"; break;
+    case c_magenta: buf << "35"; break;
+    case c_cyan: buf << "36"; break;
+    case c_white: buf << "37"; break;
   }
+  buf << 'm';
 
-  format += "m";
-
-  return format;
+  return buf.str();
 }
 
 std::string PrintFormat::unformatString() const {
