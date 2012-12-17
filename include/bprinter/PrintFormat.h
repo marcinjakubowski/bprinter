@@ -5,7 +5,7 @@
 
 namespace bprinter{
 
-enum PrintColor { black, red, green, yellow, blue, white};
+enum PrintColor {black, red, green, yellow, blue, orange, white};
 
 class PrintFormat{
 public:

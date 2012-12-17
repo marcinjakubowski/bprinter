@@ -31,62 +31,61 @@ class endl{};
   */
 class TablePrinter{
 public:
-  TablePrinter(std::ostream* output, const std::string& separator = "|");
+  TablePrinter(std::ostream* output = &std::cout, const std::string& separator = "|", const std::string& lineEnding = "");
   ~TablePrinter();
 
-  int get_num_columns() const;
-  int get_table_width() const;
-  void set_separator(const std::string & separator);
+  unsigned int numberOfColumns() const;
+  unsigned int tableWidth() const;
+  std::string separator() const;
+  std::string columnName(const unsigned int i) const;
+  unsigned int columnWidth(const unsigned int i) const;
 
-  void AddColumn(const std::string & header_name, int column_width);
-  void PrintHeader();
-  void PrintFooter();
+  void addColumn(const std::string& name, const unsigned int width);
 
-  TablePrinter& operator<<(endl input){
-    while (j_ != 0){
-      *this << "";
-    }
-    return *this;
-  }
+  void printHeader();
+  void printFooter();
 
-  // Can we merge these?
+
+  TablePrinter& operator<<(endl input);
   TablePrinter& operator<<(float input);
   TablePrinter& operator<<(double input);
 
-  template<typename T> TablePrinter& operator<<(T input){
-    if (j_ == 0)
-      *out_stream_ << "|";
+  //can't this be somewhere else? :/
+  template<typename T> TablePrinter& operator<<(T input) {
+    if (_col == 0)
+      *_outStream << separator();
 
     // Leave 3 extra space: One for negative sign, one for zero, one for decimal
-    *out_stream_ << std::setw(column_widths_.at(j_))
+    *_outStream << std::setw(columnWidth(_col))
                  << input;
 
-    if (j_ == get_num_columns()-1){
-      *out_stream_ << "|\n";
-      i_ = i_ + 1;
-      j_ = 0;
-    } else {
-      *out_stream_ << separator_;
-      j_ = j_ + 1;
+    if (_col == numberOfColumns() - 1) {
+      *_outStream << separator();
+      printEndl();
+      _row++;
+      _col = 0;
     }
-
+    else {
+      *_outStream << separator();
+      _col++;
+    }
     return *this;
   }
 
 private:
-  void PrintHorizontalLine();
+  void printHorizontalLine();
+  void printEndl();
 
-  template<typename T> void OutputDecimalNumber(T input);
+  template<typename T> void printDecimalNumber(T input);
 
-  std::ostream * out_stream_;
-  std::vector<std::string> column_headers_;
-  std::vector<int> column_widths_;
-  std::string separator_;
+  std::ostream* _outStream;
+  std::vector<std::string> _columnNames;
+  std::vector<unsigned int> _columnWidths;
+  std::string _separator;
+  std::string _lineEnding;
 
-  int i_; // index of current row
-  int j_; // index of current column
-
-  int table_width_;
+  unsigned int _row;
+  unsigned int _col;
 };
 
 }// namespace bprinter
