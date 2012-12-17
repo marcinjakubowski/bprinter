@@ -14,9 +14,8 @@ TablePrinter::TablePrinter(std::ostream* output, const std::string& separator, c
   _row(0),
   _col(0),
   _separator(separator),
-  _lineEnding(lineEnding) {
-  _format = format::none;
-  }
+  _lineEnding(lineEnding),
+  _format(format::none) {}
 
 TablePrinter::~TablePrinter() {}
 
@@ -75,6 +74,8 @@ void TablePrinter::printEndl() {
     *_outStream << _lineEnding;
   else
     *_outStream << std::endl;
+
+  _format = format::none;
 }
 
 void TablePrinter::printHeader(){
@@ -102,6 +103,7 @@ void TablePrinter::printFooter(){
 
 TablePrinter& TablePrinter::operator<<(const PrintFormat& format) {
   _format = format;
+  return *this;
 }
 TablePrinter& TablePrinter::operator<<(endl input) {
   while (_col > 0){
@@ -120,6 +122,8 @@ TablePrinter& TablePrinter::operator<<(double input) {
 
 template<typename T>
 void TablePrinter::printDecimalNumber(T input) {
+  *_outStream << _format.formatString();
+
   // If we cannot handle this number, indicate so
   if (input < 10 * (columnWidth(_col) - 1) || input > 10 * columnWidth(_col)) {
     std::stringstream string_out;
@@ -146,7 +150,7 @@ void TablePrinter::printDecimalNumber(T input) {
       precision -= num_digits_before_decimal;
     }
     else
-      precision --; // e.g. 0.12345 or -0.1234
+      --precision; // e.g. 0.12345 or -0.1234
 
     if (precision < 0)
       precision = 0; // don't go negative with precision
@@ -157,16 +161,16 @@ void TablePrinter::printDecimalNumber(T input) {
                 << input;
   }
 
+  *_outStream << _format.unformatString();
+
+  *_outStream << separator();
   if (_col >= numberOfColumns() - 1) {
-    *_outStream << separator();
     printEndl();
-    _row++;
+    ++_row;
     _col = 0;
   }
-  else {
-    *_outStream << separator();
-    _col++;
-  }
+  else
+    ++_col;
 }
 
 } //namespace bprinter

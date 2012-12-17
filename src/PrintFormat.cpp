@@ -17,11 +17,13 @@ std::string PrintFormat::formatString() const {
 
   switch(color()){
     case c_red: format += "31"; break;
-    case c_green: format += "30"; break; //TODO
+    case c_green: format += "32"; break;
     case c_yellow: format += "33"; break;
-    case c_blue: format += "30"; break; //TODO
-    case c_white: format += "30"; break; //TODO
-    case c_orange: format += "30"; break; //TODO
+    case c_blue: format += "34"; break;
+    case c_magenta: format += "35"; break;
+    case c_cyan: format += "36"; break;
+    case c_white: format += "37"; break;
+    //default
     case c_black:
     default: format += "30";
     

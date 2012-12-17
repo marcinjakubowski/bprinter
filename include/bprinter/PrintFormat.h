@@ -11,8 +11,9 @@ enum PrintColor {c_none,
 		 c_green,
 		 c_yellow,
 		 c_blue,
-		 c_orange,
-		 c_white };
+		 c_magenta,
+		 c_cyan,
+                 c_white};
 
 class PrintFormat {
 public:
@@ -40,7 +41,12 @@ namespace format {
   const PrintFormat none = PrintFormat(c_none);
   const PrintFormat black = PrintFormat(c_black);
   const PrintFormat red = PrintFormat(c_red);
+  const PrintFormat green = PrintFormat(c_green);
   const PrintFormat yellow = PrintFormat(c_yellow);
+  const PrintFormat blue = PrintFormat(c_blue);
+  const PrintFormat magenta = PrintFormat(c_magenta);
+  const PrintFormat cyan = PrintFormat(c_cyan);
+  const PrintFormat white = PrintFormat(c_white);
 } //namespace format
 
 } //namespace bprinter

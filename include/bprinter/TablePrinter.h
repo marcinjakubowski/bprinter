@@ -14,24 +14,22 @@ namespace bprinter {
 
 class endl{};
 /** \class TablePrinter
+ **
+ **Print a pretty table into your output of choice.
+ **
+ **Usage:
+ ** TablePrinter tp(&std::cout);
+ ** tp.AddColumn("Name", 25);
+ ** tp.AddColumn("Age", 3);
+ ** tp.AddColumn("Position", 30);
 
-  Print a pretty table into your output of choice.
-
-  Usage:
-    TablePrinter tp(&std::cout);
-    tp.AddColumn("Name", 25);
-    tp.AddColumn("Age", 3);
-    tp.AddColumn("Position", 30);
-
-    tp.PrintHeader();
-    tp << "Dat Chu" << 25 << "Research Assistant";
-    tp << "John Doe" << 26 << "Professional Anonymity";
-    tp << "Jane Doe" << tp.SkipToNextLine();
-    tp << "Tom Doe" << 7 << "Student";
-    tp.PrintFooter();
-
-  \todo Add support for padding in each table cell
-  */
+ ** tp.PrintHeader();
+ **  tp << "Dat Chu" << 25 << "Research Assistant";
+ ** tp << "John Doe" << 26 << "Professional Anonymity";
+ ** tp << "Jane Doe" << tp.SkipToNextLine();
+ ** tp << "Tom Doe" << 7 << "Student";
+ **tp.PrintFooter();
+ */
 class TablePrinter{
 public:
   TablePrinter(std::ostream* output = &std::cout, const std::string& separator = "|", const std::string& lineEnding = "");
@@ -60,10 +58,14 @@ public:
     if (_col == 0)
       *_outStream << separator();
 
+    *_outStream << _format.formatString();
+
     // Leave 3 extra space: One for negative sign, one for zero, one for decimal
     *_outStream << std::setw(columnWidth(_col))
                  << input;
 
+    *_outStream << _format.unformatString();
+    
     if (_col == numberOfColumns() - 1) {
       *_outStream << separator();
       printEndl();
@@ -74,6 +76,7 @@ public:
       *_outStream << separator();
       _col++;
     }
+
     return *this;
   }
 
