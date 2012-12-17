@@ -1,4 +1,4 @@
-#include "bprinter/table_printer.h"
+#include "bprinter/TablePrinter.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 

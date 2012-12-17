@@ -31,7 +31,7 @@ class endl{};
   */
 class TablePrinter{
 public:
-  TablePrinter(std::ostream * output, const std::string & separator = "|");
+  TablePrinter(std::ostream* output, const std::string& separator = "|");
   ~TablePrinter();
 
   int get_num_columns() const;
@@ -89,7 +89,6 @@ private:
   int table_width_;
 };
 
-}
+}// namespace bprinter
 
-#include "impl/table_printer.tpp.h"
-#endif
+#endif //BPRINTER_TABLE_PRINTER_H_
